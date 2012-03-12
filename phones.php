@@ -1861,17 +1861,17 @@ $phoneCodes=Array(
 
 function phone($phone = '', $convert = true, $trim = true)
 {
-    global $phoneCodes; // только для примера! При реализации избавиться от глобальной переменной.
+    global $phoneCodes; // С‚РѕР»СЊРєРѕ РґР»СЏ РїСЂРёРјРµСЂР°! РџСЂРё СЂРµР°Р»РёР·Р°С†РёРё РёР·Р±Р°РІРёС‚СЊСЃСЏ РѕС‚ РіР»РѕР±Р°Р»СЊРЅРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№.
     if (empty($phone)) {
         return '';
     }
-    // очистка от лишнего мусора с сохранением информации о "плюсе" в начале номера
+    // РѕС‡РёСЃС‚РєР° РѕС‚ Р»РёС€РЅРµРіРѕ РјСѓСЃРѕСЂР° СЃ СЃРѕС…СЂР°РЅРµРЅРёРµРј РёРЅС„РѕСЂРјР°С†РёРё Рѕ "РїР»СЋСЃРµ" РІ РЅР°С‡Р°Р»Рµ РЅРѕРјРµСЂР°
     $phone=trim($phone);
     $plus = ($phone[0] == '+');
     $phone = preg_replace("/[^0-9A-Za-z]/", "", $phone);
     $OriginalPhone = $phone;
 
-    // конвертируем буквенный номер в цифровой
+    // РєРѕРЅРІРµСЂС‚РёСЂСѓРµРј Р±СѓРєРІРµРЅРЅС‹Р№ РЅРѕРјРµСЂ РІ С†РёС„СЂРѕРІРѕР№
     if ($convert == true && !is_numeric($phone)) {
         $replace = array('2'=>array('a','b','c'),
         '3'=>array('d','e','f'),
@@ -1887,24 +1887,24 @@ function phone($phone = '', $convert = true, $trim = true)
         }
     }
 
-    // заменяем 00 в начале номера на +
+    // Р·Р°РјРµРЅСЏРµРј 00 РІ РЅР°С‡Р°Р»Рµ РЅРѕРјРµСЂР° РЅР° +
     if (substr($phone, 0, 2)=="00")
     {
         $phone = substr($phone, 2, strlen($phone)-2);
         $plus=true;
     }
 
-    // если телефон длиннее 7 символов, начинаем поиск страны
+    // РµСЃР»Рё С‚РµР»РµС„РѕРЅ РґР»РёРЅРЅРµРµ 7 СЃРёРјРІРѕР»РѕРІ, РЅР°С‡РёРЅР°РµРј РїРѕРёСЃРє СЃС‚СЂР°РЅС‹
     if (strlen($phone)>7)
     foreach ($phoneCodes as $countryCode=>$data)
     {
         $codeLen = strlen($countryCode);
         if (substr($phone, 0, $codeLen)==$countryCode)
         {
-            // как только страна обнаружена, урезаем телефон до уровня кода города
+            // РєР°Рє С‚РѕР»СЊРєРѕ СЃС‚СЂР°РЅР° РѕР±РЅР°СЂСѓР¶РµРЅР°, СѓСЂРµР·Р°РµРј С‚РµР»РµС„РѕРЅ РґРѕ СѓСЂРѕРІРЅСЏ РєРѕРґР° РіРѕСЂРѕРґР°
             $phone = substr($phone, $codeLen, strlen($phone)-$codeLen);
             $zero=false;
-            // проверяем на наличие нулей в коде города
+            // РїСЂРѕРІРµСЂСЏРµРј РЅР° РЅР°Р»РёС‡РёРµ РЅСѓР»РµР№ РІ РєРѕРґРµ РіРѕСЂРѕРґР°
             if ($data['zeroHack'] && $phone[0]=='0')
             {
                 $zero=true;
@@ -1912,7 +1912,7 @@ function phone($phone = '', $convert = true, $trim = true)
             }
 
             $cityCode=NULL;
-            // сначала сравниваем с городами-исключениями
+            // СЃРЅР°С‡Р°Р»Р° СЃСЂР°РІРЅРёРІР°РµРј СЃ РіРѕСЂРѕРґР°РјРё-РёСЃРєР»СЋС‡РµРЅРёСЏРјРё
             if ($data['exceptions_max']!=0)
             for ($cityCodeLen=$data['exceptions_max']; $cityCodeLen>=$data['exceptions_min']; $cityCodeLen--)
             if (in_array(intval(substr($phone, 0, $cityCodeLen)), $data['exceptions']))
@@ -1921,21 +1921,21 @@ function phone($phone = '', $convert = true, $trim = true)
                 $phone = substr($phone, $cityCodeLen, strlen($phone)-$cityCodeLen);
                 break;
             }
-            // в случае неудачи с исключениями вырезаем код города в соответствии с длиной по умолчанию
+            // РІ СЃР»СѓС‡Р°Рµ РЅРµСѓРґР°С‡Рё СЃ РёСЃРєР»СЋС‡РµРЅРёСЏРјРё РІС‹СЂРµР·Р°РµРј РєРѕРґ РіРѕСЂРѕРґР° РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ РґР»РёРЅРѕР№ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
             if (is_null($cityCode))
             {
                 $cityCode = substr($phone, 0, $data['cityCodeLength']);
                 $phone = substr($phone, $data['cityCodeLength'], strlen($phone)-$data['cityCodeLength']);
             }
-            // возвращаем результат
+            // РІРѕР·РІСЂР°С‰Р°РµРј СЂРµР·СѓР»СЊС‚Р°С‚
             return ($plus ? "+" : "").$countryCode.'('.$cityCode.')'.phoneBlocks($phone);
         }
     }
-    // возвращаем результат без кода страны и города
+    // РІРѕР·РІСЂР°С‰Р°РµРј СЂРµР·СѓР»СЊС‚Р°С‚ Р±РµР· РєРѕРґР° СЃС‚СЂР°РЅС‹ Рё РіРѕСЂРѕРґР°
     return ($plus ? "+" : "").phoneBlocks($phone);
 }
 
-// функция превращает любое числов в строку формата XX-XX-... или XXX-XX-XX-... в зависимости от четности кол-ва цифр
+// С„СѓРЅРєС†РёСЏ РїСЂРµРІСЂР°С‰Р°РµС‚ Р»СЋР±РѕРµ С‡РёСЃР»РѕРІ РІ СЃС‚СЂРѕРєСѓ С„РѕСЂРјР°С‚Р° XX-XX-... РёР»Рё XXX-XX-XX-... РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ С‡РµС‚РЅРѕСЃС‚Рё РєРѕР»-РІР° С†РёС„СЂ
 function phoneBlocks($number){
     $add='';
     if (strlen($number)%2)
