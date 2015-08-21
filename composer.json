@@ -1,5 +1,5 @@
 {
-  "name": "ogursan/PhoneHelper",
+  "name": "ogursan/phone-helper",
   "description": "Simple phone formatter",
   "require": {
     "php": ">=5.4.0"
