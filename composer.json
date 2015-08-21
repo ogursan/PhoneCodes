@@ -1,6 +1,7 @@
 {
   "name": "ogursan/phone-helper",
   "description": "Simple phone formatter",
+  "licence": "MIT",
   "require": {
     "php": ">=5.4.0"
   }

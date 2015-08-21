@@ -2665,7 +2665,7 @@ class PhoneHelper
         ]
     ];
 
-    public function phone($phone = '', $convert = true, $trim = true)
+    public function phone($phone = '', $convert = true)
     {
         if (empty($phone)) {
             return '';
@@ -2674,20 +2674,19 @@ class PhoneHelper
         $phone = trim($phone);
         $plus = ($phone[0] == '+');
         $phone = preg_replace("/[^0-9A-Za-z]/", "", $phone);
-        $OriginalPhone = $phone;
 
         // конвертируем буквенный номер в цифровой
         if ($convert == true && !is_numeric($phone)) {
-            $replace = array(
-                '2' => array('a', 'b', 'c'),
-                '3' => array('d', 'e', 'f'),
-                '4' => array('g', 'h', 'i'),
-                '5' => array('j', 'k', 'l'),
-                '6' => array('m', 'n', 'o'),
-                '7' => array('p', 'q', 'r', 's'),
-                '8' => array('t', 'u', 'v'),
-                '9' => array('w', 'x', 'y', 'z')
-            );
+            $replace = [
+                '2' => ['a', 'b', 'c'],
+                '3' => ['d', 'e', 'f'],
+                '4' => ['g', 'h', 'i'],
+                '5' => ['j', 'k', 'l'],
+                '6' => ['m', 'n', 'o'],
+                '7' => ['p', 'q', 'r', 's'],
+                '8' => ['t', 'u', 'v'],
+                '9' => ['w', 'x', 'y', 'z'],
+            ];
 
             foreach ($replace as $digit => $letters) {
                 $phone = str_ireplace($letters, $digit, $phone);
