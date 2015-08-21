@@ -1,0 +1,7 @@
+{
+  "name": "ogursan/PhoneHelper",
+  "description": "Simple phone formatter",
+  "require": {
+    "php": ">=5.4.0"
+  }
+}
